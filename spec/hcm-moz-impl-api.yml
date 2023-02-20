@@ -1,0 +1,418 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: DHIS2 Ingestor Service.
+  description: |
+    This service provides APIs to ingest or update DHIS2 data in bulk along with jobs history management.
+  contact:
+    name: eGovernments Foundation
+    email: contacts@egovernments.org
+schemes:
+  - https
+basePath: /hcm-moz-impl-services
+x-api-id: org.egov.hcm.moz.impl.services
+x-common-path: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml
+paths:
+  /v1/dhis2/OU/ingest:
+    post:
+      summary: Ingest DHIS2 Organization Units (Master Data) into digit system
+      description: 1. Fetch OU Data from DHIS2 2. Map OU to Digit objects (Projects,Boundary,Targets) 3. Call HCM bulk OU ingestion service to persist
+      parameters:
+        - name: DHIS2IngestionRequest
+          in: body
+          description: Details for ingesting OU data for sepcific tenantId
+          required: true
+          schema:
+            $ref: '#/definitions/DHIS2IngestionRequest'
+      responses:
+        '201':
+          description: ReponseInfo with DHIS2 OU data ingested successfully
+          schema:
+            $ref: '#/definitions/DHIS2IngestionResponse'
+        '400':
+          description: DHIS2 OU data ingestion failed
+          schema:
+            $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
+      tags:
+        - DHIS2 Digit Integration
+
+  /v1/dhis2/users/ingest:
+    post:
+      summary: Ingest DHIS2 Users (Master Data) into digit system
+      description: 1. Fetch Users Data from DHIS2 2. Map Users to Digit User objects 3. Call HCM bulk user ingestion service to persist
+      parameters:
+        - name: DHIS2IngestionRequest
+          in: body
+          description: Details for ingesting user data for sepcific tenantId
+          required: true
+          schema:
+            $ref: '#/definitions/DHIS2IngestionRequest'
+      responses:
+        '201':
+          description: ReponseInfo with DHIS2 User data ingested successfully
+          schema:
+            $ref: '#/definitions/DHIS2IngestionResponse'
+        '400':
+          description: DHIS2 User data ingestion failed
+          schema:
+            $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
+      tags:
+        - DHIS2 Digit Integration
+
+  /v1/dhis2/facilities/ingest:
+    post:
+      summary: Ingest DHIS2 facilities (Master Data) to digit application
+      description: 1. Read Facility data from csv file 2. Map Facilities to Digit object 3. Call HCM bulk facilities service to persist
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: DHIS2IngestionRequest
+          in: formData
+          type: string
+          required: true
+          description: json string for DHIS2IngestionRequest object
+        - name: facilitiesFile
+          in: formData
+          description: The Facilities metadata information in csv file having predefined template
+          required: true
+          type: file
+      responses:
+        '201':
+          description: ReponseInfo with DHIS2 facilities data ingested successfully
+          schema:
+            $ref: '#/definitions/DHIS2IngestionResponse'
+        '400':
+          description: DHIS2 facility data ingestion failed
+          schema:
+            $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
+      tags:
+        - DHIS2 Digit Integration
+
+  /v1/dhis2/household/ingest:
+    post:
+      summary: Ingest DHIS2 household registry forms (Transactional Data) to digit application
+      description: 1. Fetch household registry Data from DHIS2 2. Map household registry to Digit object 3. Call HCM bulk household ingestion service to persist
+      parameters:
+        - name: DHIS2IngestionRequest
+          in: body
+          description: Details for ingesting household registry data for sepcific tenantId
+          required: true
+          schema:
+            $ref: '#/definitions/DHIS2IngestionRequest'
+      responses:
+        '201':
+          description: ReponseInfo with DHIS2 household registry data ingested successfully
+          schema:
+            $ref: '#/definitions/DHIS2IngestionResponse'
+        '400':
+          description: DHIS2 household registry data ingestion failed
+          schema:
+            $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
+      tags:
+        - DHIS2 Digit Integration
+
+  /v1/dhis2/inventory/ingest:
+    post:
+      summary: Ingest DHIS2 inventory data to digit application
+      description: 1. Fetch entry,exit & current stocks data (Transactional Data) from DHIS2 2. Map stocks to Digit objects 3. Call HCM bulk stocks ingestion service to persist
+      parameters:
+        - name: DHIS2IngestionRequest
+          in: body
+          description: Details for ingesting inventory data for sepcific tenantId
+          required: true
+          schema:
+            $ref: '#/definitions/DHIS2IngestionRequest'
+      responses:
+        '201':
+          description: ReponseInfo with DHIS2 inventory data ingested successfully
+          schema:
+            $ref: '#/definitions/DHIS2IngestionResponse'
+        '400':
+          description: DHIS2 stocks data ingestion failed
+          schema:
+            $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
+      tags:
+        - DHIS2 Digit Integration
+
+  /v1/dhis2/supervisors/responses/ingest:
+    post:
+      summary: Ingest DHIS2 supervisor responses to digit application
+      description: 1. Fetch supervisor responses from DHIS2 2. Map supervisor responses to Digit objects 3. Call HCM bulk supervisor responses ingestion service to persist
+      parameters:
+        - name: DHIS2IngestionRequest
+          in: body
+          description: Details for ingesting supervisor response data for sepcific tenantId
+          required: true
+          schema:
+            $ref: '#/definitions/DHIS2IngestionRequest'
+      responses:
+        '201':
+          description: ReponseInfo with DHIS2 supervisor response data ingested successfully
+          schema:
+            $ref: '#/definitions/DHIS2IngestionResponse'
+        '400':
+          description: DHIS2 supervisor response data ingestion failed
+          schema:
+            $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
+      tags:
+        - DHIS2 Digit Integration
+
+  /v1/job/_create:
+    post:
+      summary: Create new job entry into digit system
+      description: Create new job entry into digit system with STARTED status and execution start time
+      parameters:
+        - name: Job
+          in: body
+          description: Descriptive name of the job entry.
+          required: true
+          schema:
+            $ref: '#/definitions/JobRequest'
+        - $ref: '#/parameters/echoResource'
+      responses:
+        '200':
+          description: Job created successfully
+          schema:
+            $ref: '#/definitions/JobResponse'
+        '400':
+          description: Job creation failed
+          schema:
+            $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
+      tags:
+        - Scheduler job
+
+  /v1/job/_update:
+    put:
+      summary: Update status for the existing job
+      description: Update existing job in digit with SUCCESS or FAILED or RETRYING status along with completion time for terminating states
+      parameters:
+        - name: Job
+          in: body
+          description: Job details for updating the job
+          required: true
+          schema:
+            $ref: '#/definitions/JobRequest'
+        - $ref: '#/parameters/echoResource'
+      tags:
+        - Scheduler job
+      responses:
+        '200':
+          description: Job entry has been accepted.
+          schema:
+            $ref: '#/definitions/JobResponse'
+        '400':
+          description: Invalid Input body.
+          schema:
+            $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
+
+  /v1/job/_delete:
+    delete:
+      summary: Delete a job entry from digit system by Id
+      description: Create new job entry into digit system with STARTED status
+      parameters:
+        - name: Job
+          in: body
+          description: delete criteria for the removal of a job
+          required: true
+          schema:
+            $ref: '#/definitions/JobRequest'
+        - $ref: '#/parameters/echoResource'
+      tags:
+        - Scheduler job
+      responses:
+        '200':
+          description: Job entry has been accepted.
+          schema:
+            $ref: '#/definitions/JobResponse'
+        '400':
+          description: Invalid Input body.
+          schema:
+            $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
+
+  /v1/job/_search:
+    get:
+      summary: Search for an existing Job in digit by id
+      description: Search for an existing job in digit by job id
+      parameters:
+        - $ref: '#/parameters/jobId'
+      tags:
+        - Scheduler job
+      responses:
+        '200':
+          description: Job Details with status
+          schema:
+            $ref: '#/definitions/JobResponse'
+        '500':
+          description: Invalid Input body.
+          schema:
+            $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ErrorRes
+
+parameters:
+  jobId:
+    type: string
+    in: query
+    name: jobId
+    description: Unique Identifier of ULB
+    maxLength: 128
+    minLength: 2
+  echoResource:
+    name: echoResource
+    in: query
+    type: boolean
+    required: false
+    default: true
+    description: Client can specify if the resource in request body needs to be sent back in the response. This is being used to limit amount of data that needs to flow back from the server to the client in low bandwidth scenarios. Server will always send the server generated id for validated requests.
+
+definitions:
+  DHIS2IngestionRequest:
+    type: object
+    description: Contract class to receive request. Array of  items are used in case of create, whereas single  item is used for update
+    properties:
+      name:
+        type: string
+        description: Capture name of the ignestion entity
+        example: OU
+        minLength: 2
+        maxLength: 1000
+      dataType:
+        type: string
+        description: Capture name of the data type
+        example: Master Data or Transactional Data
+        minLength: 2
+        maxLength: 1000
+      RequestInfo:
+        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo
+      tenantId:
+        $ref: 'https://raw.githubusercontent.com/digit-egov/health-api-specs/main/contracts/common.yaml#/definitions/tenantId'
+      auditDetails:
+        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/AuditDetails
+    required:
+      - name
+      - RequestInfo
+      - dataType
+      - tenantId
+
+  DHIS2IngestionResponse:
+    description: Contract class to send response. Array of  items are used in case of search results or response for create, whereas single  item is used for update
+    properties:
+      ResponseInfo:
+        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ResponseInfo
+      tenantId:
+        $ref: 'https://raw.githubusercontent.com/digit-egov/health-api-specs/main/contracts/common.yaml#/definitions/tenantId'
+      jobId:
+        $ref: '#/parameters/jobId'
+      eventId:
+        type: string
+        description: Unique Identifier of ULB
+        maxLength: 128
+        minLength: 2
+
+  JobRequest:
+    description: Contract class to receive job request
+    properties:
+      RequestInfo:
+        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo
+      job:
+        $ref: '#/definitions/SchedulerJobHistory'
+
+  JobResponse:
+    description: Contract class to receive job response
+    properties:
+      ResponseInfo:
+        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/ResponseInfo
+      job:
+        $ref: '#/definitions/SchedulerJobHistory'
+
+  SchedulerJobHistory:
+    description: Class to save Job History
+    properties:
+      jobID:
+        type: string
+        description: Capture jobID of the job as uuid
+        maxLength: 12
+        minLength: 12
+      jobType:
+        type: string
+        description: Capture type of the job
+        maxLength: 128
+        minLength: 2
+      JobName:
+        type: string
+        description: Capture name of the job
+        maxLength: 128
+        minLength: 2
+      ExecutionStartTime:
+        type: string
+        description: Capture execution start time of the job
+      ExecutionCompletionTime:
+        type: string
+        description: Capture execution start time of the job
+      ExecutionStatus:
+        type: string
+        description: Capture name of the job
+        maxLength: 128
+        minLength: 2
+      ExecutionRetryCount:
+        type: integer
+        description: Capture retry count of the job
+      auditDetails:
+        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/AuditDetails
+
+  DHIS2Record:
+    description: Class to save DHIS2 Record
+    properties:
+      dhis2RecordInternalID:
+        type: integer
+        description: Capture Primary key for dhis2record in digit
+      DHIS2ID:
+        type: string
+        description: Capture dhis2 id for the entity
+      DHIS2EntityType:
+        type: string
+        description: DHIS2 entity type
+      DHIS2DataPayload:
+        type: string
+        description: dhis2 data payload
+      Source:
+        type: string
+        description: dhis2 entity source (Manual/API)
+
+  DIGITMapping:
+    description: Class to save DHIS2 - Digit identifiers mapping
+    properties:
+      digitMappingId:
+        type: integer
+        description: Capture Primary key for digit-dhis2 mapping
+      dhis2RecordInternalID:
+        type: integer
+        description: Foreign key reference to dhis2 record
+      digitId:
+        type: integer
+        description: digit identifier for corresponding digit object
+      digitEntityType:
+        type: string
+        description: Digit Entity type
+      auditDetails:
+        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/AuditDetails
+
+  HCMEventHistory:
+    description: Class to track HCM events history associated with a job
+    properties:
+      eventID:
+        type: string
+        description: Unique Event Identifier as uuid
+      jobID:
+        type: string
+        description: unique identifier for job
+      url:
+        type: string
+        description: HCM service url which was hit in an event
+      payload:
+        type: string
+        description: HCM service json payload string used in HCM service event
+      status:
+        type: integer
+        description: HTTP status code from HCM event respone 200/400/500
+      message:
+        type: string
+        description: error message if returned into HCM response
