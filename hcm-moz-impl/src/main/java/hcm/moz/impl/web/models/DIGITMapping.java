@@ -35,7 +35,7 @@ public class DIGITMapping   {
         private Integer dhis2RecordInternalID = null;
 
         @JsonProperty("digitId")
-        private Integer digitId = null;
+        private String digitId = null;
 
         @JsonProperty("digitEntityType")
         private String digitEntityType = null;
