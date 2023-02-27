@@ -1,5 +1,6 @@
 package hcm.moz.impl.web.models;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -38,10 +39,10 @@ public class SchedulerJobHistory   {
         private String jobName = null;
 
         @JsonProperty("ExecutionStartTime")
-        private String executionStartTime = null;
+        private LocalDateTime executionStartTime = null;
 
         @JsonProperty("ExecutionCompletionTime")
-        private String executionCompletionTime = null;
+        private LocalDateTime executionCompletionTime = null;
 
         @JsonProperty("ExecutionStatus")
         private String executionStatus = null;

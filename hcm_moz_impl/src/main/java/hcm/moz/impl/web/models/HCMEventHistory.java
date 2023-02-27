@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.json.JSONObject;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -37,7 +38,7 @@ public class HCMEventHistory   {
         private String url = null;
 
         @JsonProperty("payload")
-        private String payload = null;
+        private JSONObject payload = null;
 
         @JsonProperty("status")
         private Integer status = null;
@@ -45,6 +46,7 @@ public class HCMEventHistory   {
         @JsonProperty("message")
         private String message = null;
 
-
+        @JsonProperty("auditDetails")
+        private AuditDetails auditDetails = null;
 }
 

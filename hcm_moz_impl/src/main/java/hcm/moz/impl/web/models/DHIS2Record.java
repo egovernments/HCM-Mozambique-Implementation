@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.json.JSONObject;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -37,10 +38,13 @@ public class DHIS2Record   {
         private String dhIS2EntityType = null;
 
         @JsonProperty("DHIS2DataPayload")
-        private String dhIS2DataPayload = null;
+        private JSONObject dhIS2DataPayload = null;
 
         @JsonProperty("Source")
         private String source = null;
+
+        @JsonProperty("auditDetails")
+        private AuditDetails auditDetails = null;
 
 
 }
