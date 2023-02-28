@@ -100,7 +100,7 @@ serviceMaps:
 
             - jsonPath: $.auditDetails.createdTime
 
-            - jsonPath: $.auditDetails.lastModifiedTime\
+            - jsonPath: $.auditDetails.lastModifiedTime
 
         - query: INSERT INTO eg_hcm_event_history(eventID, jobID, url, payload, status, message, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: HCMEventHistory
