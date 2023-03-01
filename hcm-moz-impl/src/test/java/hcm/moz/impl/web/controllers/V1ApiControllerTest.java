@@ -1,11 +1,5 @@
 package hcm.moz.impl.web.controllers;
 
-import hcm.moz.impl.web.models.DHIS2IngestionRequest;
-import hcm.moz.impl.web.models.DHIS2IngestionResponse;
-import hcm.moz.impl.web.models.ErrorRes;
-import hcm.moz.impl.web.models.JobRequest;
-import hcm.moz.impl.web.models.JobResponse;
-import org.springframework.core.io.Resource;
 import org.junit.Test;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
