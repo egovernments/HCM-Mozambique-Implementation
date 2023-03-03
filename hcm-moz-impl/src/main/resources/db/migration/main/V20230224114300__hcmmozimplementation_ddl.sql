@@ -22,7 +22,7 @@ CREATE TABLE eg_digit_mapping(
                     CONSTRAINT uk_eg_digit_mapping PRIMARY KEY (digitMappingId)
 );
 CREATE TABLE eg_scheduler_job_history(
-                    jobId character varying(64),
+                    jobID character varying(64),
                     jobType character varying(64),
                     jobName character varying(128),
                     executionStartTime timestamp,
@@ -40,7 +40,7 @@ CREATE TABLE eg_hcm_event_history(
                     jobId character varying(64),
                     url character varying(64),
                     payload json,
-                    status character varying(64),
+                    status bigint,
                     message character varying(64),
                     createdBy character varying(64),
                     lastModifiedBy character varying(64),
