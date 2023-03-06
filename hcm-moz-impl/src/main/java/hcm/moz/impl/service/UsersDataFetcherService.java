@@ -33,10 +33,13 @@ public class UsersDataFetcherService {
     @Value("${egov.dhis2.users.endpoint}")
     private String dhis2UsersEndpoint;
 
+    @Value("${egov.dhis2.roles.endpoint}")
+    private String dhis2RolesEndpoint;
+
     @Value("${egov.dhis2.users.fields}")
     private String dhis2UsersFields;
 
-    public JsonNode fetch(int pageNo, int pageSize) {
+    public JsonNode fetchUsers(int pageNo, int pageSize) {
         try {
             //TODO: Get host url by tenant from MDMS service
             String baseUrl = dhis2ServiceHostUrl + dhis2UsersEndpoint;
@@ -47,6 +50,21 @@ public class UsersDataFetcherService {
             return objectMapper.readTree(users);
         } catch (URISyntaxException | JsonProcessingException e) {
             logger.error("Failed while fetching users data from dhis2 with error", e);
+        }
+        return new POJONode(null);
+    }
+
+    public JsonNode fetchRoles(int pageNo, int pageSize) {
+        try {
+            //TODO: Get host url by tenant from MDMS service
+            String baseUrl = dhis2ServiceHostUrl + dhis2RolesEndpoint;
+            baseUrl = baseUrl + "?page=" + pageNo + "&pageSize="+ pageSize + "&fields=" + dhis2RolesEndpoint;
+            ResponseEntity<String> response = dhis2RestUtils.get(baseUrl,null, HttpMethod.GET);
+            String users = response.getBody();
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readTree(users);
+        } catch (URISyntaxException | JsonProcessingException e) {
+            logger.error("Failed while fetching roles data from dhis2 with error", e);
         }
         return new POJONode(null);
     }

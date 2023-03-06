@@ -1,17 +1,12 @@
 package hcm.moz.impl.web.controllers;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import hcm.moz.impl.service.UserService;
 import hcm.moz.impl.service.UsersDataFetcherService;
-import hcm.moz.impl.web.models.DHIS2IngestionRequest;
-import hcm.moz.impl.web.models.DHIS2IngestionResponse;
-import hcm.moz.impl.web.models.ErrorRes;
-import hcm.moz.impl.web.models.JobRequest;
-import hcm.moz.impl.web.models.JobResponse;
-import org.springframework.core.io.Resource;
+import hcm.moz.impl.web.models.*;
     import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,13 +37,15 @@ public class V1ApiController{
         private final HttpServletRequest request;
 
         private final UsersDataFetcherService usersDataFetcherService;
+        private final UserService userService;
 
         @Autowired
         public V1ApiController(ObjectMapper objectMapper, HttpServletRequest request,
-                               UsersDataFetcherService usersDataFetcherService) {
+                               UsersDataFetcherService usersDataFetcherService, UserService userService) {
         this.objectMapper = objectMapper;
         this.request = request;
         this.usersDataFetcherService = usersDataFetcherService;
+        this.userService = userService;
         }
 
         @RequestMapping(value="/v1/dhis2/facilities/ingest", method = RequestMethod.POST)
@@ -126,6 +123,9 @@ public class V1ApiController{
             String accept = request.getHeader("Accept");
             if (accept != null && accept.contains("application/json")) {
                 try {
+                    JsonNode jsonNode = usersDataFetcherService.fetchUsers(1,100);
+                    List<User> users = userService.mapToDigitUsers(jsonNode);
+                    //TODO: Persistence for digit users
                     return new ResponseEntity<DHIS2IngestionResponse>(objectMapper.readValue("{  \"ResponseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  },  \"jobId\" : \"\",  \"eventId\" : \"eventId\",  \"tenantId\" : \"tenantA\"}", DHIS2IngestionResponse.class), HttpStatus.NOT_IMPLEMENTED);
                 } catch (IOException e) {
                     return new ResponseEntity<DHIS2IngestionResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
