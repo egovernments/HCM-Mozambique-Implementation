@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.egov</groupId>
-    <artifactId>HCM_Moz_Impl</artifactId>
+    <artifactId>hcm-moz-impl</artifactId>
     <packaging>jar</packaging>
-    <name>HCM_Moz_Impl</name>
+    <name>hcm-moz-impl</name>
     <version>1.0.0</version>
     <properties>
     <java.version>1.8</java.version>
@@ -91,6 +91,16 @@
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hisp</groupId>
+            <artifactId>dhis2-java-client</artifactId>
+            <version>1.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hisp.dhis.integration.sdk</groupId>
+            <artifactId>dhis2-java-sdk</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
     <repositories>
