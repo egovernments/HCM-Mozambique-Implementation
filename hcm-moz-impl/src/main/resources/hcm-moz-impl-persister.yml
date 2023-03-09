@@ -78,52 +78,43 @@ serviceMaps:
       isTransaction: true
       queryMaps:
         - query: INSERT INTO eg_scheduler_job_history(jobID, jobType, JobName, ExecutionStartTime, ExecutionCompletionTime, ExecutionStatus, ExecutionRetryCount, createdBy,lastModifiedBy,createdTime,lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-          basePath: SchedulerJobHistory
+          basePath: $.job
           jsonMaps:
-            - jsonPath: $.jobID
-
-            - jsonPath: $.jobType
-
-            - jsonPath: $.JobName
-
-            - jsonPath: $.ExecutionStartTime
-                -
-            - jsonPath: $.ExecutionCompletionTime
-                -
-            - jsonPath: $.ExecutionStatus
-                -
-            - jsonPath: $.ExecutionRetryCount
-
-            - jsonPath: $.auditDetails.createdBy
-
-            - jsonPath: $.auditDetails.lastModifiedBy
-
-            - jsonPath: $.auditDetails.createdTime
-
-            - jsonPath: $.auditDetails.lastModifiedTime\
-
-        - query: INSERT INTO eg_hcm_event_history(eventID, jobID, url, payload, status, message, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-          basePath: HCMEventHistory
-          jsonMaps:
-            - jsonPath: $.eventID
-
-            - jsonPath: $.jobID
-
-            - jsonPath: $.url
-
-            - jsonPath: $.payload
-
-            - jsonPath: $.status
-
-            - jsonPath: $.message
-
-            - jsonPath: $.auditDetails.createdBy
-
-            - jsonPath: $.auditDetails.lastModifiedBy
-
-            - jsonPath: $.auditDetails.createdTime
-
-            - jsonPath: $.auditDetails.lastModifiedTime
+            - jsonPath: $.job.jobID
+              type: STRING
+              dbType: STRING
+            - jsonPath: $.job.jobType
+              type: STRING
+              dbType: STRING
+            - jsonPath: $.job.JobName
+              type: STRING
+              dbType: STRING
+            - jsonPath: $.job.ExecutionStartTime
+              type: CURRENTDATE
+              dbType: CURRENTDATE
+              format: YYYY-MM-DD
+            - jsonPath: $.job.ExecutionCompletionTime
+              type: CURRENTDATE
+              dbType: CURRENTDATE
+              format: YYYY-MM-DD
+            - jsonPath: $.job.ExecutionStatus
+              type: STRING
+              dbType: STRING
+            - jsonPath: $.job.ExecutionRetryCount
+              type: INT
+              dbType: INT
+            - jsonPath: $.job.auditDetails.createdBy
+              type: STRING
+              dbType: STRING
+            - jsonPath: $.job.auditDetails.lastModifiedBy
+              type: STRING
+              dbType: STRING
+            - jsonPath: $.job.auditDetails.createdTime
+              type: LONG
+              dbType: LONG
+            - jsonPath: $.job.auditDetails.lastModifiedTime
+              type: LONG
+              dbType: LONG
 
     - version: 1.0
       description: Update DHIS2 to Digit transformation job history in table

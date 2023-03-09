@@ -5,6 +5,7 @@ import digit.models.coremodels.RequestInfoWrapper;
 import hcm.moz.impl.service.SchedulerJobService;
 import hcm.moz.impl.util.ResponseInfoFactory;
 import hcm.moz.impl.web.models.*;
+import hcm.moz.impl.web.models.Error;
 import lombok.extern.slf4j.Slf4j;
     import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
@@ -134,7 +137,7 @@ public class V1ApiController{
     }
 
     @RequestMapping(value="/v1/job/_create", method = RequestMethod.POST)
-    public ResponseEntity<JobResponse> v1JobCreatePost(@ApiParam(value = "Descriptive name of the job entry." ,required=true )  @Valid @RequestBody JobRequest job,@ApiParam(value = "Client can specify if the resource in request body needs to be sent back in the response. This is being used to limit amount of data that needs to flow back from the server to the client in low bandwidth scenarios. Server will always send the server generated id for validated requests.", defaultValue = "true") @Valid @RequestParam(value = "echoResource", required = false, defaultValue="true") Boolean echoResource) {
+    public ResponseEntity<?> v1JobCreatePost(@ApiParam(value = "Descriptive name of the job entry." ,required=true )  @Valid @RequestBody JobRequest job,@ApiParam(value = "Client can specify if the resource in request body needs to be sent back in the response. This is being used to limit amount of data that needs to flow back from the server to the client in low bandwidth scenarios. Server will always send the server generated id for validated requests.", defaultValue = "true") @Valid @RequestParam(value = "echoResource", required = false, defaultValue="true") Boolean echoResource) {
             String accept = request.getHeader("Accept");
             if (accept != null && accept.contains("application/json")) {
             try {
@@ -145,8 +148,11 @@ public class V1ApiController{
             } catch (Exception e) {
                 LOG.error("error thrown");
                 ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(job.getRequestInfo(), true);
-
-                return new ResponseEntity<JobResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
+                Error error = Error.builder().code(HttpStatus.BAD_REQUEST.toString()).message(e.getMessage()).description(e.getLocalizedMessage()).build();
+                List<Error> errors = new ArrayList<>();
+                errors.add(error);
+                ErrorRes errorRes = ErrorRes.builder().responseInfo(responseInfo).errors(errors).build();
+                return new ResponseEntity<>(errorRes, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
