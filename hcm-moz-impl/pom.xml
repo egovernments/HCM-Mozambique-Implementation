@@ -97,11 +97,6 @@
             <artifactId>dhis2-java-client</artifactId>
             <version>1.6.3</version>
         </dependency>
-        <dependency>
-            <groupId>org.hisp.dhis.integration.sdk</groupId>
-            <artifactId>dhis2-java-sdk</artifactId>
-            <version>1.0.0</version>
-        </dependency>
     </dependencies>
     <repositories>
         <repository>
