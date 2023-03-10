@@ -2,11 +2,13 @@ package hcm.moz.impl.web.controllers;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
+import hcm.moz.impl.service.OrgUnitsDataFetcherService;
 import hcm.moz.impl.service.UserService;
 import hcm.moz.impl.service.UsersDataFetcherService;
 import hcm.moz.impl.web.models.*;
     import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import org.hisp.dhis.model.OrgUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,15 +39,19 @@ public class V1ApiController{
         private final HttpServletRequest request;
 
         private final UsersDataFetcherService usersDataFetcherService;
+
+        private final OrgUnitsDataFetcherService orgUnitsDataFetcherService;
         private final UserService userService;
 
         @Autowired
         public V1ApiController(ObjectMapper objectMapper, HttpServletRequest request,
-                               UsersDataFetcherService usersDataFetcherService, UserService userService) {
+                               UsersDataFetcherService usersDataFetcherService, UserService userService,
+                               OrgUnitsDataFetcherService orgUnitsDataFetcherService) {
         this.objectMapper = objectMapper;
         this.request = request;
         this.usersDataFetcherService = usersDataFetcherService;
         this.userService = userService;
+        this.orgUnitsDataFetcherService = orgUnitsDataFetcherService;
         }
 
         @RequestMapping(value="/v1/dhis2/facilities/ingest", method = RequestMethod.POST)
@@ -91,12 +97,15 @@ public class V1ApiController{
         }
 
         @RequestMapping(value="/v1/dhis2/OU/ingest", method = RequestMethod.POST)
-        public ResponseEntity<DHIS2IngestionResponse> v1Dhis2OUIngestPost(@ApiParam(value = "Details for ingesting OU data for sepcific tenantId" ,required=true )  @Valid @RequestBody DHIS2IngestionRequest dhIS2IngestionRequest) {
+        public ResponseEntity<?> v1Dhis2OUIngestPost(@ApiParam(value = "Details for ingesting OU data for sepcific tenantId" ,required=true )  @Valid @RequestBody DHIS2IngestionRequest dhIS2IngestionRequest) {
                 String accept = request.getHeader("Accept");
                     if (accept != null && accept.contains("application/json")) {
                     try {
-                    return new ResponseEntity<DHIS2IngestionResponse>(objectMapper.readValue("{  \"ResponseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  },  \"jobId\" : \"\",  \"eventId\" : \"eventId\",  \"tenantId\" : \"tenantA\"}", DHIS2IngestionResponse.class), HttpStatus.NOT_IMPLEMENTED);
-                    } catch (IOException e) {
+                       List<OrgUnit> orgUnits =  orgUnitsDataFetcherService.fetchOrgUnits(1, 100);
+                        //TODO: Map to DIGIT related entities(Projects,Boundary,Targets)
+                        //TODO: Persist DIGIT Entities
+                    return new ResponseEntity<List<OrgUnit>>(orgUnits, HttpStatus.OK);
+                    } catch (Exception e) {
                     return new ResponseEntity<DHIS2IngestionResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
                     }
                     }
