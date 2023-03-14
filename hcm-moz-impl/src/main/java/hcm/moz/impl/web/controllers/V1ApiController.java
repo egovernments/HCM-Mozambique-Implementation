@@ -2,11 +2,14 @@ package hcm.moz.impl.web.controllers;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
+import hcm.moz.impl.service.HouseholdRegistryFetcherService;
 import hcm.moz.impl.service.UserService;
 import hcm.moz.impl.service.UsersDataFetcherService;
 import hcm.moz.impl.web.models.*;
     import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import org.hisp.dhis.model.event.Event;
+import org.hisp.dhis.model.event.Events;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,14 +40,18 @@ public class V1ApiController{
         private final HttpServletRequest request;
 
         private final UsersDataFetcherService usersDataFetcherService;
+
+        private final HouseholdRegistryFetcherService householdRegistryFetcherService;
         private final UserService userService;
 
         @Autowired
         public V1ApiController(ObjectMapper objectMapper, HttpServletRequest request,
-                               UsersDataFetcherService usersDataFetcherService, UserService userService) {
+                               UsersDataFetcherService usersDataFetcherService,
+                               HouseholdRegistryFetcherService householdRegistryFetcherService, UserService userService) {
         this.objectMapper = objectMapper;
         this.request = request;
         this.usersDataFetcherService = usersDataFetcherService;
+        this.householdRegistryFetcherService = householdRegistryFetcherService;
         this.userService = userService;
         }
 
@@ -63,12 +70,13 @@ public class V1ApiController{
         }
 
         @RequestMapping(value="/v1/dhis2/household/ingest", method = RequestMethod.POST)
-        public ResponseEntity<DHIS2IngestionResponse> v1Dhis2HouseholdIngestPost(@ApiParam(value = "Details for ingesting household registry data for sepcific tenantId" ,required=true )  @Valid @RequestBody DHIS2IngestionRequest dhIS2IngestionRequest) {
+        public ResponseEntity<?> v1Dhis2HouseholdIngestPost(@ApiParam(value = "Details for ingesting household registry data for sepcific tenantId" ,required=true )  @Valid @RequestBody DHIS2IngestionRequest dhIS2IngestionRequest) {
                 String accept = request.getHeader("Accept");
                     if (accept != null && accept.contains("application/json")) {
                     try {
-                    return new ResponseEntity<DHIS2IngestionResponse>(objectMapper.readValue("{  \"ResponseInfo\" : {    \"ver\" : \"ver\",    \"resMsgId\" : \"resMsgId\",    \"msgId\" : \"msgId\",    \"apiId\" : \"apiId\",    \"ts\" : 0,    \"status\" : \"SUCCESSFUL\"  },  \"jobId\" : \"\",  \"eventId\" : \"eventId\",  \"tenantId\" : \"tenantA\"}", DHIS2IngestionResponse.class), HttpStatus.NOT_IMPLEMENTED);
-                    } catch (IOException e) {
+                        List<Event> eventsHouseholdRegistry = householdRegistryFetcherService.fetchHouseholdRegistryData(1, 100);
+                    return new ResponseEntity<List<Event>>(eventsHouseholdRegistry, HttpStatus.OK);
+                    } catch (Exception e) {
                     return new ResponseEntity<DHIS2IngestionResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
                     }
                     }
